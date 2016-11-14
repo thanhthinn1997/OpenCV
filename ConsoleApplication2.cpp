@@ -31,13 +31,11 @@ list<Mat> ResizeImageList(list<Mat> inputList, int newWidth, int newHeight)
 {
 	list<Mat> temp;
 	Size size(newWidth, newHeight);
-	Mat NewFrame;
-	int n = inputList.size();
-	for (int i = 0; i < n; i++)
+	for (list<Mat>::iterator i = inputList.begin(); i !=inputList.end(); ++i)
 	{
-		resize(inputList.front(), NewFrame, size);
-		inputList.pop_front();
-		temp.push_front(NewFrame);
+		Mat NewFrame;
+		resize(*i, NewFrame, size);
+		temp.push_back(NewFrame);
 	}
 	return temp;
 }
@@ -45,13 +43,11 @@ list<Mat> ResizeImageList(list<Mat> inputList, int newWidth, int newHeight)
 list<Mat> ImageListToGrayscale(list<Mat> inputList)
 {
 	list<Mat> temp;
-	Mat newframe;
-	int n = inputList.size();
-	for (int i = 0; i < n; i++)
+	for (list<Mat>::iterator i = inputList.begin(); i != inputList.end(); ++i)
 	{
-		cvtColor(inputList.front(), newframe, CV_RGB2GRAY);
-		inputList.pop_front();
-		temp.push_front(newframe);
+		Mat newframe;
+		cvtColor(*i, newframe, CV_RGB2GRAY);
+		temp.push_back(newframe);
 	}
 	return temp;
 }
@@ -61,11 +57,11 @@ void SaveImageList(list<Mat> inputList, string folderName)
 	folderName += "\\";
 	string linkfile = "md" + folderName;
 	system(linkfile.c_str());
-	int n = inputList.size();
-	for (int i = 0; i < n; i++)
+	int temp = 0;
+	for (list<Mat>::iterator i = inputList.begin(); i != inputList.end(); ++i)
 	{
-		imwrite(folderName + to_string(i) + ".png", inputList.front());
-		inputList.pop_front();
+		imwrite(folderName + to_string(temp) + ".png", *i);
+		temp++;
 	}
 }
 
@@ -76,7 +72,7 @@ int main()
 	cout << "Output: "; cin >> output;
 	list<Mat> temp;
 	temp = GetImageList(input, 10);
-	cout << temp.size();
+	//cout << temp.size();
 	temp = ResizeImageList(temp, 300, 300);
 	temp = ImageListToGrayscale(temp);
 	SaveImageList(temp, output);
